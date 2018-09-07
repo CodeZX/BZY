@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" restorationIdentifier="SortTableViewCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="SortTableViewCell" id="KGk-i7-Jjw" customClass="SortTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MV3-F6-bS3">
+                        <rect key="frame" x="25" y="5" width="110" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="arM-px-N0i">
+                        <rect key="frame" x="235" y="13.5" width="15" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="80s-g1-zRh"/>
+                            <constraint firstAttribute="width" constant="15" id="BJe-2u-VUh"/>
+                        </constraints>
+                        <state key="normal" image="empty_heart"/>
+                        <state key="selected" image="red_heart"/>
+                        <connections>
+                            <action selector="collectBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="aLR-VC-mLe"/>
+                        </connections>
+                    </button>
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YQC-sn-7zN">
+                        <rect key="frame" x="290" y="16" width="10" height="10"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="10" id="HSj-sk-lRq"/>
+                            <constraint firstAttribute="width" constant="10" id="uZZ-YP-aUo"/>
+                        </constraints>
+                        <state key="normal" image="tabbar_np_play"/>
+                        <connections>
+                            <action selector="playBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="91d-Qv-ZIj"/>
+                        </connections>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1dn-Jj-wZN">
+                        <rect key="frame" x="25" y="18" width="50" height="20.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                <constraints>
+                    <constraint firstItem="YQC-sn-7zN" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="6PI-cI-L4d"/>
+                    <constraint firstAttribute="trailing" secondItem="YQC-sn-7zN" secondAttribute="trailing" constant="20" id="7xj-fH-OjU"/>
+                    <constraint firstItem="arM-px-N0i" firstAttribute="leading" secondItem="MV3-F6-bS3" secondAttribute="trailing" constant="100" id="G8K-uN-L8P"/>
+                    <constraint firstItem="MV3-F6-bS3" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="II9-ul-yCy"/>
+                    <constraint firstItem="1dn-Jj-wZN" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="25" id="Ope-D5-Ewd"/>
+                    <constraint firstItem="MV3-F6-bS3" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="25" id="f8f-XX-Gyj"/>
+                    <constraint firstAttribute="bottom" secondItem="1dn-Jj-wZN" secondAttribute="bottom" constant="5" id="mtc-4I-SNo"/>
+                    <constraint firstItem="YQC-sn-7zN" firstAttribute="leading" secondItem="arM-px-N0i" secondAttribute="trailing" constant="40" id="o1r-Ao-jeg"/>
+                    <constraint firstItem="arM-px-N0i" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="v5Q-gE-KDS"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="aW0-zy-SZf"/>
+            <connections>
+                <outlet property="authorLabel" destination="1dn-Jj-wZN" id="lpG-bW-BuZ"/>
+                <outlet property="titleLable" destination="MV3-F6-bS3" id="lyd-p5-WQl"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="empty_heart" width="23" height="21"/>
+        <image name="red_heart" width="23" height="21"/>
+        <image name="tabbar_np_play" width="19" height="20"/>
+    </resources>
+</document>

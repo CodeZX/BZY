@@ -1,0 +1,36 @@
+//
+//  BZYPrefixHeader.pch
+//  BZY
+//
+//  Created by 周鑫 on 2018/9/3.
+//  Copyright © 2018年 ZX. All rights reserved.
+//
+
+#ifndef BZYPrefixHeader_pch
+#define BZYPrefixHeader_pch
+
+
+#pragma mark - The three parties
+// 定义这个常量，就可以不用在开发过程中使用"mas_"前缀。
+#define MAS_SHORTHAND
+// 定义这个常量，就可以让Masonry帮我们自动把基础数据类型的数据，自动装箱为对象类型。
+#define MAS_SHORTHAND_GLOBALS
+#pragma mark - H file
+#import <Masonry/Masonry.h>
+#import <DFPlayer/DFPlayer.h>
+#import <MJRefresh/MJRefresh.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <DZNEmptyDataSet/UIScrollView+EmptyDataSet.h>
+#import <JKCategories/JKCategories.h>
+#import <MBProgressHUD/MBProgressHUD.h>
+#import <AFNetworking/AFNetworking.h>
+#import <MJExtension/MJExtension.h>
+
+
+
+#import "CommonDefine.h"
+#import "MBProgressHUD+Nero.h"
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* BZYPrefixHeader_pch */
