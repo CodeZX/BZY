@@ -11,7 +11,8 @@
 #import "HomeSortModel.h"
 #import "HomeCollectionViewCell.h"
 
-#import "TNGWebNavigationViewController.h"
+//#import "TNGWebNavigationViewController.h"
+#import <TJWebTools/TJWebTools.h>
 
 static NSString *code = @"1";
 @interface HomeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>

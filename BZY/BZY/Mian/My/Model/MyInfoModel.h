@@ -12,7 +12,8 @@ typedef  void (^actionBlock)(void);
 @interface MyInfoModel : NSObject
 
 @property (nonatomic,strong) NSString *title;
+@property (nonatomic,strong) NSString *pictureName;
 @property (nonatomic,strong) actionBlock block;
 
-- (instancetype)initWithTitle:(NSString *)title actionBlock:(actionBlock)block;
+- (instancetype)initWithTitle:(NSString *)title  pictureName:(NSString *)pictureName actionBlock:(actionBlock)block;
 @end

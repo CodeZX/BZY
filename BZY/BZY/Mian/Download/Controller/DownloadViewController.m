@@ -12,9 +12,10 @@
 #import "AudioModel.h"
 #import "LocalAudio+CoreDataClass.h"
 #import "DownLoadAudioModel.h"
+#import "MusicItemModel.h"
 
 
-@interface DownloadViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface DownloadViewController ()<UITableViewDelegate,UITableViewDataSource,DZNEmptyDataSetSource,DZNEmptyDataSetDelegate>
 
 @property (nonatomic,weak) UITableView *tableView;
 @property (nonatomic,strong) NSMutableArray *dataSource;
@@ -38,6 +39,8 @@
 //    tableView.backgroundColor = [UIColor redColor];
     tableView.delegate = self;
     tableView.dataSource = self;
+    tableView.emptyDataSetSource = self;
+    tableView.emptyDataSetDelegate = self;
     [self.view addSubview:tableView];
     self.tableView = tableView;
     self.tableView.mj_header =  [MJRefreshGifHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadNewData)];
@@ -50,6 +53,7 @@
 - (void)loadNewData {
     
     [self.tableView.mj_header endRefreshing];
+    [self.dataSource removeAllObjects];
 //    self.dataSource = [self getAllFileByName:PATH_OF_DOCUMENT];
 //    [self.tableView reloadData];
 //    NSLog(@"%@",self.dataSource);
@@ -77,11 +81,11 @@
     NSArray *employees = [context executeFetchRequest:request error:&error];
     [employees enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         LocalAudio *loaclAudio = (LocalAudio *)obj;
-        DownLoadAudioModel *audioModel = [[DownLoadAudioModel alloc]init];
+        MusicItemModel *audioModel = [[MusicItemModel alloc]init];
         audioModel.name = loaclAudio.name;
         audioModel.pic = loaclAudio.pic;
         audioModel.author = loaclAudio.author;
-        audioModel.url = loaclAudio.url;
+        audioModel.url = loaclAudio.url.absoluteString;
         [weakSelf.dataSource addObject:audioModel];
         [weakSelf.tableView reloadData];
 //        NSLog(@"文件名称%@",audioModel.name);
@@ -142,11 +146,22 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     return self.dataSource.count;
+//    return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return 55;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    
+    return [[UIView alloc]init];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    
+    return 0.1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -155,7 +170,8 @@
     if (!cell) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"SortTableViewCell" owner:nil options:nil] lastObject];
     }
-    cell.downLoadAudioModel = self.dataSource[indexPath.row];
+    cell.itemModel = self.dataSource[indexPath.row];
+//    cell.downLoadAudioModel = self.dataSource[indexPath.row];
     //    AudioModel *audioModel = self.dataSource[indexPath.row];
     //    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:audioModel.pic]];
     //    cell.textLabel.text = audioModel.name;
@@ -168,8 +184,12 @@
       
 //    DownLoadAudioModel *downLoadAudioModel = self.dataSource[indexPath.row];
 //    PlayViewController *playVC = [[PlayViewController alloc]initWithAudioDownLoadAudioModel:downLoadAudioModel];
-    PlayViewController *playVC = [[PlayViewController alloc]initWithAudioDownLoadAudioModelarray:self.dataSource currentIndex:indexPath.row];
-    [self.navigationController pushViewController:playVC animated:YES];
+//    PlayViewController *playVC = [[PlayViewController alloc]initWithAudioDownLoadAudioModelarray:self.dataSource currentIndex:indexPath.row];
+//    [self.navigationController pushViewController:playVC animated:YES];
+    PlayViewController *playVC = [[PlayViewController alloc]initWithAudioSource:self.dataSource currentItemModelAtIndex:indexPath.row];
+    [self presentViewController:playVC animated:YES completion:^{
+        
+    }];
 }
 
 
@@ -233,6 +253,30 @@
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"删除";
     
+}
+
+
+#pragma mark DZNEmptyDataSetDelegate
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
+    
+    NSAttributedString *attString = [[NSAttributedString alloc]initWithString:@"暂无下载音乐"];
+    return attString;
+}
+
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+    
+    return [UIImage imageNamed:@"无下载"];
+}
+
+- (BOOL)emptyDataSetShouldAllowTouch:(UIScrollView *)scrollView {
+    
+    return YES;
+}
+
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapView:(UIView *)view {
+    
+    DEBUG_LOG(@"1111");
+    [self.tableView.mj_header beginRefreshing];
 }
 
 #pragma mark -------------------------- lazy load ----------------------------------------

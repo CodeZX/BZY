@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class AudioModel,DownLoadAudioModel;
+@class AudioModel,DownLoadAudioModel,MusicItemModel;
 @interface SortTableViewCell : UITableViewCell
 
 @property (nonatomic,strong) AudioModel *audioModel;
 @property (nonatomic,strong) DownLoadAudioModel *downLoadAudioModel;
+@property (nonatomic,strong) MusicItemModel *itemModel;
 @end

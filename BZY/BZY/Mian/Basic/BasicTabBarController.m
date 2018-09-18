@@ -17,6 +17,7 @@
 #import "MyViewController.h"
 #import "MyDownloadViewController.h"
 #import "DownloadViewController.h"
+#import "MusicViewController.h"
 
 @interface BasicTabBarController ()
 
@@ -35,9 +36,11 @@
     
    
     
-    HomeViewController *HomeVC =  [[HomeViewController alloc]init];
-    [self setChildViewController:HomeVC Image:@"音乐" selectedImage:@"音乐-1" title:@"music"];
+//    HomeViewController *HomeVC =  [[HomeViewController alloc]init];
+//    [self setChildViewController:HomeVC Image:@"音乐" selectedImage:@"音乐-1" title:@"music"];
     
+    MusicViewController *musicVC =  [[MusicViewController alloc]init];
+    [self setChildViewController:musicVC Image:@"音乐" selectedImage:@"音乐-1" title:@"music"];
     
     DownloadViewController *downloadVC = [[DownloadViewController alloc]init];
     [self setChildViewController:downloadVC Image:@"下载-11" selectedImage:@"下载-1" title:@"download"];

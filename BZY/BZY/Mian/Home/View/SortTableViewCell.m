@@ -9,6 +9,7 @@
 #import "SortTableViewCell.h"
 #import "AudioModel.h"
 #import "DownLoadAudioModel.h"
+#import "MusicItemModel.h"
 
 @interface SortTableViewCell ()
 
@@ -35,6 +36,13 @@
     _audioModel = audioModel;
     self.titleLable.text = audioModel.name;
     self.authorLabel.text = audioModel.author;
+}
+
+- (void)setItemModel:(MusicItemModel *)itemModel {
+    
+    _itemModel = itemModel;
+    self.titleLable.text = itemModel.name;
+    self.authorLabel.text = itemModel.author;
 }
 
 - (void)setDownLoadAudioModel:(DownLoadAudioModel *)downLoadAudioModel {

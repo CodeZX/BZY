@@ -12,4 +12,6 @@
 @interface SortViewController : BasicViewController
 - (instancetype)initWithSortModel:(HomeSortModel *)sortModel;
 
+
+- (instancetype)initWithAlias:(NSString *)alias;
 @end

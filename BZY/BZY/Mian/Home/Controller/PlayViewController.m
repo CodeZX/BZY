@@ -19,7 +19,10 @@
 @property (nonatomic,strong) AVPlayer *player;
 @property (nonatomic,strong) BZYPlayManager *playManager;
 
+@property (nonatomic,strong) UIButton *closeBtn;
 
+@property (nonatomic,weak) UILabel *audioNameLab;
+@property (nonatomic,weak) UILabel *authorLab;
 
 @property (nonatomic,weak) UIImageView *picture;
 @property (nonatomic,weak) UIButton *playPauseBtn;
@@ -42,57 +45,38 @@
 
 @implementation PlayViewController
 
-- (instancetype)initWithAudioModel:(AudioModel *)audioModel {
+
+
+
+- (instancetype)initWithAudioSource:(NSArray<MusicItemModel *> *)itemModels currentItemModelAtIndex:(NSInteger)index {
+    
     self = [super init];
     if (self) {
-        self.isSwitch = NO;
-        self.audioModel = audioModel;
-        self.dataSource = [[NSMutableArray alloc]init];
-        self.playManager = [BZYPlayManager sharedInstance];
-        
+        if (itemModels) {
+            [[BZYPlayManager sharedInstance] addAudioSource:itemModels];
+            [[BZYPlayManager sharedInstance] playWithIndex:index];
         }
-    return self;
-}
-
-- (instancetype)initWithAudioDownLoadAudioModel:(DownLoadAudioModel *)downLoadAudioModel {
-    
-    self = [super init];
-    if (self) {
-        self.isSwitch = NO;
-        self.downLoadAudioModel = downLoadAudioModel;
-        self.dataSource = [[NSMutableArray alloc]init];
+        
         self.playManager = [BZYPlayManager sharedInstance];
     }
     return self;
 }
 
-- (instancetype)initWithAudioModelarray:(NSArray<AudioModel *> *)audioModels currentIndex:(NSInteger)index {
+
+- (instancetype)initWithAudioSource:(NSArray<MusicItemModel *> *)itemModels {
     self = [super init];
     if (self) {
-        self.isSwitch = YES;
-        self.currentIndex = index;
-        self.audioModels = audioModels;
-        self.audioModel = audioModels[index];
-        self.dataSource = [[NSMutableArray alloc]init];
+        if (itemModels) {
+            [[BZYPlayManager sharedInstance] addAudioSource:itemModels];
+        }
+
         self.playManager = [BZYPlayManager sharedInstance];
     }
     return self;
-    
 }
 
-- (instancetype)initWithAudioDownLoadAudioModelarray:(NSArray<DownLoadAudioModel *> *)downLoadAudioModels currentIndex:(NSInteger)index {
-    self = [super init];
-    if (self) {
-        self.isSwitch = YES;
-        self.currentIndex = index;
-        self.downLoadAudioModels = downLoadAudioModels;
-        self.downLoadAudioModel = downLoadAudioModels[index];
-        self.dataSource = [[NSMutableArray alloc]init];
-        self.playManager = [BZYPlayManager sharedInstance];
-    }
-    return self;
-    
-}
+
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -103,26 +87,15 @@
 - (void)initializePlay {
     
     __weak typeof(self) weakSelf = self;
-    if (self.audioModel) {
-        
-        [self.playManager playWithURL:[NSURL URLWithString:self.audioModel.url]];
-        self.title = self.audioModel.name;
-    }else {
-        
-        [self.playManager playWithURL:self.downLoadAudioModel.url];
-        self.title = self.downLoadAudioModel.name;
-    }
-    
-    
-    //    self.currentTimeLabel.text = [self timeIntervalToMMSSFormat: CMTimeGetSeconds([self.playManager.player.currentItem currentTime])];
-    //    self.totalTimeLabel.text = [self timeIntervalToMMSSFormat: CMTimeGetSeconds([self.playManager.player.currentItem duration])];
+
     [self.playManager.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 60) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         weakSelf.currentTimeLabel.text = [weakSelf timeIntervalToMMSSFormat: CMTimeGetSeconds([weakSelf.playManager.player.currentItem currentTime])];
-        weakSelf.totalTimeLabel.text = [weakSelf timeIntervalToMMSSFormat: CMTimeGetSeconds([self.playManager.player.currentItem duration])];
+        weakSelf.totalTimeLabel.text = [weakSelf timeIntervalToMMSSFormat: CMTimeGetSeconds([weakSelf.playManager.player.currentItem duration])];
         CGFloat seconds  = CMTimeGetSeconds([weakSelf.playManager.player.currentItem currentTime])/CMTimeGetSeconds([weakSelf.playManager.player.currentItem duration]);
         //        NSLog(@"%f",seconds);
         [weakSelf.slider setValue:seconds *100 animated:YES];
     }];
+   
     
     
 }
@@ -152,8 +125,28 @@
 
 - (void)collectBtnClicked:(UIButton *)btn {
     
-    btn.selected = !btn.selected;
-    [MBProgressHUD showSuccess:@"收藏成功"];
+//    btn.selected = !btn.selected;
+    [MBProgressHUD showMessage:@"加载中..."];
+    
+    NSDictionary *dic = @{@"id":self.playManager.currentItemModel.ID};
+    [[AFHTTPSessionManager manager] POST:@"http://45.63.35.70:8080/tj_audio/join_collect" parameters:dic progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        [MBProgressHUD hideHUD];
+        if ([responseObject[@"code"] isEqualToString:@"200"]) {
+            btn.enabled = NO;
+            btn.selected = YES;
+            [MBProgressHUD showSuccess:@"收藏成功"];
+//            self.items = [MusicItemModel mj_objectArrayWithKeyValuesArray:responseObject[@"retData"]];
+//            [self.tableView reloadData];
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+    }];
+    
+    
+    
+
 }
 
 - (void)downloadBtnClicked:(UIButton *)btn  {
@@ -250,12 +243,18 @@
 - (void)playPauseBtn:(UIButton *)btn  {
     
     btn.selected = !btn.selected;
-    if ([self.playManager isPlay]) {
-        [self.playManager pause];
+    if (btn.selected) {
+         [self.playManager.player pause];
     }else {
-        [self initializePlay];
-//        [self.playManager playWithURL:[NSURL URLWithString:self.audioModel.url]];
+        [self.playManager.player play];
     }
+   
+//    if ([self.playManager isPlay]) {
+//        [self.playManager pause];
+//    }else {
+//        [self initializePlay];
+////        [self.playManager playWithURL:[NSURL URLWithString:self.audioModel.url]];
+//    }
 }
 - (NSString *)timeIntervalToMMSSFormat:(NSTimeInterval)interval {
     NSInteger ti = (NSInteger)interval;
@@ -264,6 +263,12 @@
     return [NSString stringWithFormat:@"%02ld:%02ld", (long)minutes, (long)seconds];
 }
 
+- (void)closeBtnClicked:(UIButton *)btn {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
 - (void)setupUI {
     
     
@@ -272,6 +277,54 @@
     self.view.backgroundColor = [[UIColor alloc]initWithPatternImage:[UIImage imageNamed:@"毛玻璃背景"]];
     
     __weak typeof(self) weakSelf = self;
+    
+    
+    UIButton *closeBtn = [[UIButton alloc]init];
+    [closeBtn setImage:[UIImage imageNamed:@"收起"] forState:UIControlStateNormal];
+    [closeBtn addTarget:self action:@selector(closeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:closeBtn];
+    self.closeBtn = closeBtn;
+    [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(weakSelf.view).offset(30);
+        make.top.equalTo(weakSelf.view).offset(iPhoneX?44:24);
+        make.size.equalTo(CGSizeMake(20, 20));
+    }];
+    
+    
+    
+    UILabel *audioNameLab = [[UILabel alloc]init];
+    audioNameLab.text = self.playManager.currentItemModel.name;
+    audioNameLab.textAlignment = NSTextAlignmentCenter;
+    audioNameLab.textColor = [UIColor whiteColor];
+    audioNameLab.font = [UIFont systemFontOfSize:13];
+    [self.view addSubview:audioNameLab];
+    self.audioNameLab = audioNameLab;
+    [self.audioNameLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(weakSelf.view).offset(100);
+        make.left.equalTo(weakSelf.view).offset(100);
+        make.right.equalTo(weakSelf.view).offset(-100);
+        
+    }];
+    
+    
+    UILabel *authorLab = [[UILabel alloc]init];
+    authorLab.text = self.playManager.currentItemModel.author;
+    authorLab.textAlignment = NSTextAlignmentCenter;
+    authorLab.textColor = [UIColor whiteColor];
+    authorLab.font = [UIFont systemFontOfSize:12];
+    [self.view addSubview:authorLab];
+    self.authorLab = authorLab;
+    [self.authorLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(weakSelf.view).offset(130);
+        make.left.equalTo(weakSelf.view).offset(100);
+        make.right.equalTo(weakSelf.view).offset(-100);
+        
+    }];
+     
+    
+    
+    
+    
     UIImageView *picture = [[UIImageView alloc]init];
     if (self.audioModel) {
         [picture sd_setImageWithURL:[NSURL URLWithString:self.audioModel.pic] placeholderImage:[UIImage imageNamed:@"1"]];
@@ -376,7 +429,7 @@
     
     
     
-    if (self.downLoadAudioModel || self.audioModel) {
+    if ([BZYPlayManager sharedInstance].player.currentItem) {
         
         UIButton *playPauseBtn = [[UIButton alloc]init];
         //    playPauseBtn.backgroundColor = [UIColor redColor];
@@ -393,7 +446,7 @@
     }
    
     
-    if (self.isSwitch) {
+    if (self.playManager.musicItemModelArray.count > 1) {
         
         UIButton *lastBtn = [[UIButton alloc]init];
         //    lastBtn.backgroundColor = [UIColor redColor];
@@ -426,36 +479,17 @@
 
 - (void)lastBtn:(UIButton *)btn {
     
-    if (self.audioModel) {
-        if (--self.currentIndex >= 0) {
-            self.audioModel = self.audioModels[self.currentIndex];
-            [self initializePlay];
-        }
-        
-    } else {
-        if (--self.currentIndex >= 0) {
-            self.downLoadAudioModel = self.downLoadAudioModels[self.currentIndex];
-            [self initializePlay];
-        }
-        
-    }
+    [self.playManager lastAudio];
+    [self initializePlay];
+   
+
 }
 
 - (void)nextBtn:(UIButton *)btn {
     
-    if (self.audioModels) {
-        
-        if (++self.currentIndex <= self.audioModels.count) {
-            self.audioModel = self.audioModels[self.currentIndex];
-            [self initializePlay];
-        }
-    } else {
-        if (++self.currentIndex <= self.audioModels.count) {
-            self.downLoadAudioModel = self.downLoadAudioModels[self.currentIndex];
-            [self initializePlay];
-        }
-        
-    }
+    [self.playManager nextAudio];
+    [self initializePlay];
+   
 }
 
 

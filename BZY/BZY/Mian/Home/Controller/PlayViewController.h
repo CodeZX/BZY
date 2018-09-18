@@ -7,6 +7,7 @@
 //
 
 #import "BasicViewController.h"
+#import "MusicItemModel.h"
 
 @class AudioModel,DownLoadAudioModel;
 @interface PlayViewController : BasicViewController
@@ -18,4 +19,11 @@
 
 - (instancetype)initWithAudioModelarray:(NSArray <AudioModel *> *)audioModels currentIndex:(NSInteger)index;
 - (instancetype)initWithAudioDownLoadAudioModelarray:(NSArray <DownLoadAudioModel *> *)downLoadAudioModels currentIndex:(NSInteger)index;
+
+- (instancetype)initWithAudioSource:(NSArray <MusicItemModel *>*)itemModels;
+- (instancetype)initWithAudioSource:(NSArray <MusicItemModel *>*)itemModels currentItemModelAtIndex:(NSInteger)index;
+
+//- (instancetype)initWithAudioSource:(NSArray <MusicItemModel *> *)itemModels;
+
+//- (void)addAudioSource:(NSArray <MusicItemModel *> *)itemModels;
 @end

@@ -26,13 +26,23 @@
     self.title = @"about";
     self.view.backgroundColor = [UIColor whiteColor];
     
-    WKWebView *webView = [[WKWebView alloc]initWithFrame:self.view.bounds];
-    [self.view addSubview:webView];
-    self.webView = webView;
+//    WKWebView *webView = [[WKWebView alloc]initWithFrame:self.view.bounds];
+//    [self.view addSubview:webView];
+//    self.webView = webView;
     
 //    relo
     
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.miui.com/zt/miui10/whitenoise.html"]]];
+    __weak typeof(self) weakSelf = self;
+    UILabel *label = [[UILabel alloc]init];
+    label.text = @"Hear the best voice and be the best of yourself";
+    label.font = [UIFont systemFontOfSize:12];
+    label.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:label];
+    [label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(weakSelf.view);
+    }];
+    
+    
     
 }
 - (void)didReceiveMemoryWarning {

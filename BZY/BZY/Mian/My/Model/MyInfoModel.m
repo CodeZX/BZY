@@ -9,11 +9,12 @@
 #import "MyInfoModel.h"
 
 @implementation MyInfoModel
-- (instancetype)initWithTitle:(NSString *)title actionBlock:(actionBlock)block {
+- (instancetype)initWithTitle:(NSString *)title pictureName:(NSString *)pictureName actionBlock:(actionBlock)block {
     
     self = [super init];
     if (self) {
         self.title = title;
+        self.pictureName = pictureName;
         self.block = block;
     }
     return self;
